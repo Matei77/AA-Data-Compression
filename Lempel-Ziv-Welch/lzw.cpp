@@ -1,21 +1,14 @@
 ///
-/// @file
-/// @author Julius Pettersson
-/// @copyright MIT/Expat License.
+/// @author Matei-Stefan Ionescu
 /// @brief LZW file compressor
-/// @version 1
+/// @remark This code is a slightly modified version of Julius Pettersson's code
+///			that can be found at https://cplusplus.com/articles/iL18T05o/#Version1
 ///
 /// This is the C++11 implementation of a Lempel-Ziv-Welch single-file
 /// command-line compressor. It uses the simpler fixed-width code compression
-/// method. It was written with Doxygen comments.
+/// method.
 ///
-/// @see http://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Welch
-/// @see http://marknelson.us/2011/11/08/lzw-revisited/
-/// @see http://www.cs.duke.edu/csed/curious/compression/lzw.html
-/// @see http://warp.povusers.org/EfficientLZW/index.html
-/// @see http://en.cppreference.com/
-/// @see http://www.doxygen.org/
-///
+
 
 #include <cstdint>
 #include <cstdlib>
@@ -31,12 +24,9 @@
 #include <string>
 #include <vector>
 
-#include <chrono>
-#include <iomanip>
-#include <numeric>
-
 #include <sys/resource.h>
 #include <unistd.h>
+
 
 /// Type used to store and retrieve codes.
 using CodeType = std::uint16_t;
@@ -60,6 +50,14 @@ std::vector<char> operator+(std::vector<char> vc, char c)
 	return vc;
 }
 
+long get_mem_usage()
+{
+	struct rusage myusage;
+
+	getrusage(RUSAGE_SELF, &myusage);
+	return myusage.ru_maxrss;
+}
+
 ///
 /// @brief Compresses the contents of `input_file` and writes the result to
 /// `output_file`.
@@ -68,6 +66,7 @@ std::vector<char> operator+(std::vector<char> vc, char c)
 ///
 void compress(std::istream &input_file, std::ofstream &output_file)
 {
+
 	std::map<std::vector<char>, CodeType> dictionary;
 
 	// "named" lambda function, used to reset the dictionary to its initial
@@ -115,6 +114,7 @@ void compress(std::istream &input_file, std::ofstream &output_file)
 	if (!s.empty())
 		output_file.write(reinterpret_cast<const char *>(&dictionary.at(s)),
 						  sizeof(CodeType));
+	
 }
 
 ///
@@ -191,18 +191,8 @@ void print_error(const std::string &message = "", bool show_usage = true)
 	std::cerr << std::endl;
 }
 
-long get_mem_usage()
-{
-	struct rusage myusage;
-
-	getrusage(RUSAGE_SELF, &myusage);
-	return myusage.ru_maxrss;
-}
-
 int main(int argc, char *argv[])
 {
-	// long baseline = get_mem_usage();
-	// std::cout << std::fixed << std::setprecision(9) << std::left;
 
 	if (argc != 4) {
 		print_error("Wrong number of argumets.");
@@ -245,24 +235,17 @@ int main(int argc, char *argv[])
 		output_file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
 
 		if (mode == Mode::Compress) {
-			// auto start = std::chrono::system_clock::now();
 			compress(input_file, output_file);
-			// auto end = std::chrono::system_clock::now();
 
-			// std::chrono::duration<double> diff = end - start;
-			// std::cout << "File compressed in " << diff.count() <<" s\n";
-			// printf("usage: %ld + %ld\n", baseline, get_mem_usage() -
-			// baseline);
+			// uncomment to show memory usage
+			// printf("memory usage: %ld\n", get_mem_usage());
 
 		} else if (mode == Mode::Decompress) {
-			// auto start = std::chrono::system_clock::now();
 			decompress(input_file, output_file);
-			// auto end = std::chrono::system_clock::now();
 
-			// std::chrono::duration<double> diff = end - start;
-			// std::cout << "File decompressed in " << diff.count() <<" s\n";
-			// printf("usage: %ld + %ld\n", baseline, get_mem_usage() -
-			// baseline);
+			// uncomment to show memroy usage
+			// printf("memory usage: %ld\n", get_mem_usage());
+
 		}
 	} catch (const std::ios_base::failure &f) {
 		print_error(std::string("File input/output failure: ") + f.what() + '.',
