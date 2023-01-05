@@ -1,5 +1,3 @@
-// Patrick Sheehan
-
 #include "utils.h"
 
 #include <fstream>

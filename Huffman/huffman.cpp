@@ -1,3 +1,12 @@
+///
+/// @author Matei-Stefan Ionescu
+/// @brief Huffman file compressor
+/// @remark This code is a slightly modified version of Patrick Sheehan's code
+///			that can be found at https://github.com/patricksheehan/Huffman-Compression
+///
+/// This is the C++11 implementation of a Huffman single-file command-line compressor.
+///
+
 #include <cstdint>
 #include <cstdlib>
 #include <exception>
@@ -16,6 +25,15 @@
 #include <unistd.h>
 
 #include "utils.h"
+
+
+long get_mem_usage()
+{
+	struct rusage myusage;
+
+	getrusage(RUSAGE_SELF, &myusage);
+	return myusage.ru_maxrss;
+}
 
 ///
 /// @brief Compresses the contents of `input_file` and writes the result to
@@ -114,18 +132,8 @@ void print_error(const std::string &message = "", bool show_usage = true)
 	std::cerr << std::endl;
 }
 
-long get_mem_usage()
-{
-	struct rusage myusage;
-
-	getrusage(RUSAGE_SELF, &myusage);
-	return myusage.ru_maxrss;
-}
-
 int main(int argc, char *argv[])
 {
-	// long baseline = get_mem_usage();
-	// std::cout << std::fixed << std::setprecision(9) << std::left;
 
 	if (argc != 4) {
 		print_error("Wrong number of argumets.");
@@ -168,24 +176,18 @@ int main(int argc, char *argv[])
 		output_file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
 
 		if (mode == Mode::Compress) {
-			// auto start = std::chrono::system_clock::now();
 			compress(input_file, output_file);
-			// auto end = std::chrono::system_clock::now();
 
-			// std::chrono::duration<double> diff = end - start;
-			// std::cout << "File compressed in " << diff.count() <<" s\n";
-			// printf("usage: %ld + %ld\n", baseline, get_mem_usage() -
-			// baseline);
+			// uncomment to show memory usage
+			// printf("memory usage: %ld\n", get_mem_usage());
+
 
 		} else if (mode == Mode::Decompress) {
-			// auto start = std::chrono::system_clock::now();
 			decompress(input_file, output_file);
-			// auto end = std::chrono::system_clock::now();
+			
+			// uncomment to show memory usage
+			// printf("memory usage: %ld\n", get_mem_usage());
 
-			// std::chrono::duration<double> diff = end - start;
-			// std::cout << "File decompressed in " << diff.count() <<" s\n";
-			// printf("usage: %ld + %ld\n", baseline, get_mem_usage() -
-			// baseline);
 		}
 	} catch (const std::ios_base::failure &f) {
 		print_error(std::string("File input/output failure: ") + f.what() + '.',
