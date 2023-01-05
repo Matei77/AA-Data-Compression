@@ -8,8 +8,8 @@ huffman: Huffman/huffman.cpp Huffman/utils.cpp
 	g++ -Wall -Wextra -std=c++11 -O3 Huffman/huffman.cpp Huffman/utils.cpp -o Huffman/huffman
 
 .PHONY: run-best
-run-best: run_lzw.sh
-	./run_lzw.sh
+run-best: scripts/run_lzw.sh
+	./scripts/run_lzw.sh
 
 .PHONY: run-p1
 run-p1: scripts/run_lzw.sh
