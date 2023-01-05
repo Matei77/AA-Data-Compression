@@ -8,7 +8,8 @@ do
 	uncompressed_size=$(du -b in/test$i.in | awk '{print $1;}')
 	compressed_size=$(du -b out/test$i.out1 | awk '{print $1;}')
 
-	awk "BEGIN {printf(\"compressed test$i.in -- compression ratio: %.2f -- space saving ratio: %.2f%%\n\", ($uncompressed_size / $compressed_size), ((1.0 - $compressed_size/$uncompressed_size) * 100.0))}"
+	awk "BEGIN {printf(\"compressed test$i.in \t -- compression ratio: %.2f \t -- space saving ratio: %.2f%%\n\",
+	($uncompressed_size / $compressed_size), ((1.0 - $compressed_size/$uncompressed_size) * 100.0))}"
 done
 
 echo ;
