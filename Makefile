@@ -8,12 +8,16 @@ huffman: Huffman/huffman.cpp Huffman/utils.cpp
 	g++ -Wall -Wextra -std=c++11 -O3 Huffman/huffman.cpp Huffman/utils.cpp -o Huffman/huffman
 
 .PHONY: run-p1
-run-p1:
+run-p1: run_lzw.sh
 	./run_lzw.sh
 
 .PHONY: run-p2
-run-p2:
+run-p2: run_huffman.sh
 	./run_huffman.sh
+
+.PHONY: run_hyperfine
+run_hyperfine: run_hyperfine.sh
+	./run_hyperfine.sh
 
 .PHONY: clean
 clean:
