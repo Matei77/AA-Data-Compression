@@ -25,4 +25,4 @@ run-hyperfine: scripts/run_hyperfine.sh
 
 .PHONY: clean
 clean:
-	rm out/* aux/* Lempel-Ziv-Welch/lzw Huffman/huffman
+	rm -f out/* aux/* Lempel-Ziv-Welch/lzw Huffman/huffman
