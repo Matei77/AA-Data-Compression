@@ -168,8 +168,8 @@ void decompress(std::istream &input_file, std::ostream &output_file)
 
 ///
 /// @brief Prints usage information and a custom error message.
-/// @param s    custom error message to be printed
-/// @param su   Show Usage information
+/// @param message      custom error message to be printed
+/// @param show_usage   Show Usage information
 ///
 void print_error(const std::string &message = "", bool show_usage = true)
 {
@@ -184,8 +184,8 @@ void print_error(const std::string &message = "", bool show_usage = true)
 					 "decompressing, and\n";
 		std::cerr << "`input_file' and `output_file' are distinct files.\n\n";
 		std::cerr << "Examples:\n";
-		std::cerr << "\t./lzw -c test.in test.out\n";
-		std::cerr << "\t./lzw -d test.out aux.in\n";
+		std::cerr << "\t./lzw -c file.in compressed_file.out\n";
+		std::cerr << "\t./lzw -d compressed_file.out decompressed_file.in\n";
 	}
 
 	std::cerr << std::endl;
